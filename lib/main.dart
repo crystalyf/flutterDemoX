@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demox/screens/input_page.dart';
+import 'package:flutter_demox/screens/example/record_top.dart';
 
 void main() {
   runApp(MyApp());
@@ -33,20 +34,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() {
-    // /**
-    //  *   调用 setState() 方法通知 flutter framework 状态发生改变，重新调用 build 方法构建 widget 树，来进行更新操作
-    //  */
-    // setState(() {
-    //   _counter++;
-    // });
-
-    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
-        context,
-        MaterialPageRoute(
-            builder: (context) => InputPage(), fullscreenDialog: true));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,6 +55,9 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            OutlineButton(onPressed: () {
+              _transferToRecordTop();
+            }, child: Text('记录Top Page'))
           ],
         ),
       ),
@@ -78,4 +68,27 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  void _incrementCounter() {
+    // /**
+    //  *   调用 setState() 方法通知 flutter framework 状态发生改变，重新调用 build 方法构建 widget 树，来进行更新操作
+    //  */
+    // setState(() {
+    //   _counter++;
+    // });
+
+    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+        context,
+        MaterialPageRoute(
+            builder: (context) => InputPage(), fullscreenDialog: true));
+  }
+
+  ///跳转到recordTop
+  void _transferToRecordTop() {
+    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+        context,
+        MaterialPageRoute(
+            builder: (context) => RecordTop(), fullscreenDialog: true));
+  }
+
 }
