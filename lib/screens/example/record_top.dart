@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_demox/screens/example/components/eat_card_top.dart';
 import 'package:flutter_demox/screens/example/components/reusable_card.dart';
+import 'package:flutter_demox/screens/example/record_top_view_model.dart';
 import 'package:flutter_demox/screens/example/resource/colors.dart';
 import 'package:flutter_demox/screens/example/resource/constants.dart';
 import 'package:flutter_demox/screens/example/resource/styles.dart';
+import 'package:provider/provider.dart';
 
 class RecordTop extends StatefulWidget {
   @override
@@ -15,124 +17,163 @@ class _RecordTopState extends State<RecordTop> {
   //当天摄入的卡路里
   int kcalValue = -1220;
 
-  bool isHaveEatData = true;
-  bool isHaveStepData = true;
-  bool isHaveWeightData = true;
-  bool isHaveFeelData = false;
-  bool isHaveSleepData = false;
-  bool isHaveHealthAgeData = true;
-  bool isHaveHealthDiagnosisData = true;
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Scaffold(
-      //透明背景的appbar
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        title: Text('記録'),
-        textTheme: TextTheme(
-            subtitle1: TextStyle(
-                //设置appBar的文本样式
-                color: BeautyColors.blue02)),
-        centerTitle: true,
-        // 标题居中
-        backgroundColor: Colors.transparent,
-        //把appbar的背景色改成透明
-        elevation: 0, //阴影为0
-      ),
-      body: Container(
-        //调整小格布局的整体边界
-        margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-        child: Column(
-          children: <Widget>[
-            Container(
-              //在小格布局的基础上，调整eatTop布局
-              margin: EdgeInsets.fromLTRB(5, 0, 5, 7),
-              child: EatCardTop(
-                  cardChild: EatDataWidget(
-                isHaveData: isHaveEatData,
-                kcalValue: kcalValue,
-              )),
+    return ChangeNotifierProvider(
+      create: (context) {
+        return RecordTopViewModel();
+      },
+      child: Container(
+        child: Consumer<RecordTopViewModel>(builder: (context, value, child) {
+          return Scaffold(
+            //透明背景的appbar
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              title: Text('記録'),
+              textTheme: TextTheme(
+                  subtitle1: TextStyle(
+                      //设置appBar的文本样式
+                      color: BeautyColors.blue02)),
+              centerTitle: true,
+              // 标题居中
+              backgroundColor: Colors.transparent,
+              //把appbar的背景色改成透明
+              elevation: 0, //阴影为0
             ),
-            Expanded(
-                child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: ReusableCard(
-                      onPress: () {
-                        setState(() {});
-                      },
-                      cardChild: StepDataWidget(isHaveData: isHaveStepData)),
-                ),
-                Expanded(
-                  child: ReusableCard(
-                      onPress: () {
-                        setState(() {
-                          print('体重：press!!!');
-                        });
-                      },
-                      cardChild: WeightDataWidget(
-                        isHaveData: isHaveWeightData,
-                      )),
-                ),
-              ],
-            )),
-            Expanded(
-                child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: ReusableCard(
-                      onPress: () {
-                        print('感觉：press');
-                      },
-                      cardChild: FeelDataWidget(
-                        isHaveData: isHaveFeelData,
-                      )),
-                ),
-                Expanded(
-                  child: ReusableCard(
-                      onPress: () {
-                        setState(() {});
-                      },
-                      cardChild: SleepDataWidget(
-                        isHaveData: isHaveSleepData,
-                      )),
-                ),
-              ],
-            )),
-            Expanded(
-                child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: ReusableCard(
-                      onPress: () {
-                        print('健康年龄：press');
-                      },
-                      cardChild: HealthAgeDataWidget(
-                        isHaveData: isHaveHealthAgeData,
-                      )),
-                ),
-                Expanded(
-                  child: ReusableCard(
-                    onPress: () {
-                      setState(() {});
-                    },
-                    cardChild: HealthDiagnosisDataWidget(
-                      isHaveData: isHaveHealthDiagnosisData,
-                    ),
+            body: Container(
+              //调整小格布局的整体边界
+              margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    //在小格布局的基础上，调整eatTop布局
+                    margin: EdgeInsets.fromLTRB(5, 0, 5, 7),
+                    child: EatCardTop(
+                        cardChild: EatDataWidget(
+                      isHaveData:
+                          context.watch<RecordTopViewModel>().isHaveEatData,
+                      kcalValue: kcalValue,
+                    )),
                   ),
-                ),
-              ],
-            ))
-          ],
-        ),
+                  Expanded(
+                      child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: ReusableCard(
+                            onPress: () {
+                              _stepWidgetClick(context);
+                            },
+                            cardChild: StepDataWidget(
+                                isHaveData: context
+                                    .watch<RecordTopViewModel>()
+                                    .isHaveStepData)),
+                      ),
+                      Expanded(
+                        child: ReusableCard(
+                            onPress: () {
+                              setState(() {
+                                print('体重：press!!!');
+                              });
+                            },
+                            cardChild: WeightDataWidget(
+                              isHaveData: context
+                                  .watch<RecordTopViewModel>()
+                                  .isHaveWeightData,
+                            )),
+                      ),
+                    ],
+                  )),
+                  Expanded(
+                      child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: ReusableCard(
+                            onPress: () {
+                              print('感觉：press');
+                            },
+                            cardChild: FeelDataWidget(
+                              isHaveData: context
+                                  .watch<RecordTopViewModel>()
+                                  .isHaveFeelData,
+                            )),
+                      ),
+                      Expanded(
+                        child: ReusableCard(
+                            onPress: () {
+                              setState(() {});
+                            },
+                            cardChild: SleepDataWidget(
+                              isHaveData: context
+                                  .watch<RecordTopViewModel>()
+                                  .isHaveSleepData,
+                            )),
+                      ),
+                    ],
+                  )),
+                  Expanded(
+                      child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: ReusableCard(
+                            onPress: () {
+                              print('健康年龄：press');
+                            },
+                            cardChild: HealthAgeDataWidget(
+                              isHaveData: context
+                                  .watch<RecordTopViewModel>()
+                                  .isHaveHealthAgeData,
+                            )),
+                      ),
+                      Expanded(
+                        child: ReusableCard(
+                          onPress: () {
+                            setState(() {});
+                          },
+                          cardChild: HealthDiagnosisDataWidget(
+                            isHaveData: context
+                                .watch<RecordTopViewModel>()
+                                .isHaveHealthDiagnosisData,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ))
+                ],
+              ),
+            ),
+          );
+        }),
       ),
-    ));
+    );
+  }
+
+  void _stepWidgetClick(BuildContext context) {
+    if (context.read<RecordTopViewModel>().isHaveStepData) {
+      _transferToStepTop(context);
+    } else {
+      _transferToStepTutorial(context);
+    }
+  }
+
+  ///「CC02-02_ 歩数 TOP- 日表示」へ遷移
+  void _transferToStepTop(BuildContext context) {
+    setState(() {
+      context.read<RecordTopViewModel>().isHaveStepData =
+          !context.read<RecordTopViewModel>().isHaveStepData;
+    });
+  }
+
+  ///「CC01-01_ 歩数計チュートリアル -01」へ遷移
+  void _transferToStepTutorial(BuildContext context) {
+    setState(() {
+      context.read<RecordTopViewModel>().isHaveStepData =
+          !context.read<RecordTopViewModel>().isHaveStepData;
+    });
   }
 }
 
 ///Eat数据的Widget
+// ignore: must_be_immutable
 class EatDataWidget extends StatelessWidget {
   EatDataWidget({this.isHaveData, this.kcalValue});
 
@@ -142,9 +183,9 @@ class EatDataWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isHaveData) {
-      ///有Eat数据时的Widget
+      ///have data Widget
       return Container(
-        margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+        // margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -153,38 +194,40 @@ class EatDataWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.fromLTRB(16, 16, 0, 0),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 24,
-                              height: 24,
-                              child: Image.asset('assets/ic_drawer_meal.png'),
-                            ),
-                            Container(
-                                margin: EdgeInsets.only(left: 4.0),
-                                child: Text(
-                                  '食事Check',
-                                  style: Styles.text5.merge(
-                                    TextStyle(color: BeautyColors.blue01),
-                                  ),
-                                ))
-                          ],
+                  Container(
+                    margin: EdgeInsets.fromLTRB(16, 16, 0, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 24,
+                                height: 24,
+                                child: Image.asset('assets/ic_drawer_meal.png'),
+                              ),
+                              Container(
+                                  margin: EdgeInsets.only(left: 4.0),
+                                  child: Text(
+                                    '食事チェック',
+                                    style: Styles.text5.merge(
+                                      TextStyle(color: BeautyColors.blue01),
+                                    ),
+                                  ))
+                            ],
+                          ),
                         ),
-                      ),
-                      Container(
-                        child: Text(
-                          '2019.4.28(月)',
-                          style: Styles.text3.merge(TextStyle(
-                            color: BeautyColors.gray06,
-                          )),
-                        ),
-                      )
-                    ],
+                        Container(
+                          child: Text(
+                            context.watch<RecordTopViewModel>().currentDate,
+                            style: Styles.text3.merge(TextStyle(
+                              color: BeautyColors.gray06,
+                            )),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   Container(
                     margin: EdgeInsets.only(top: 16),
@@ -195,32 +238,49 @@ class EatDataWidget extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           kcalValue.toString(),
-                          style: recordTopEatTopNumberTextStyle1,
+                          style: Styles.text1.merge(
+                            TextStyle(
+                              color: BeautyColors.pink01,
+                              fontSize: 30.0,
+                            ),
+                          ),
                         ),
                         Text(
                           'kcal',
-                          style: recordItemEatTopTextStyle3,
+                          style: Styles.text9.merge(
+                            TextStyle(
+                              color: BeautyColors.pink01,
+                            ),
+                          ),
                         )
                       ],
                     ),
                   ),
-                  getSeekWidget(),
+                  getSeekWidget(context.watch<RecordTopViewModel>().totalKCal),
                   Row(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(left: 16.0),
+                        margin: EdgeInsets.only(left: 16.0, top: 5),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.baseline,
                           textBaseline: TextBaseline.alphabetic,
                           children: <Widget>[
                             Text(
-                              '累计1800',
-                              style: recordItemEatTopTextStyle4,
+                              '累计' +
+                                  context
+                                      .watch<RecordTopViewModel>()
+                                      .totalKCal
+                                      .toString(),
+                              style: TextStyle(
+                                fontSize: 16.0,
+                              ),
                             ),
                             Text(
                               'kcal',
-                              style: recordItemEatTopTextStyle45,
+                              style: TextStyle(
+                                fontSize: 10.0,
+                              ),
                             )
                           ],
                         ),
@@ -234,11 +294,15 @@ class EatDataWidget extends StatelessWidget {
                           children: <Widget>[
                             Text(
                               '目标3000',
-                              style: recordItemEatTopTextStyle4,
+                              style: TextStyle(
+                                fontSize: 16.0,
+                              ),
                             ),
                             Text(
                               'kcal',
-                              style: recordItemEatTopTextStyle45,
+                              style: TextStyle(
+                                fontSize: 10.0,
+                              ),
                             )
                           ],
                         ),
@@ -246,7 +310,7 @@ class EatDataWidget extends StatelessWidget {
                     ],
                   ),
                   Container(
-                    margin: EdgeInsets.fromLTRB(30, 15, 0, 25),
+                    margin: EdgeInsets.fromLTRB(16, 15, 0, 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -345,13 +409,13 @@ class EatDataWidget extends StatelessWidget {
               margin: EdgeInsets.only(right: 12.0),
               width: 24,
               height: 24,
-              child: Image.asset("assets/ic_cheveron.png"),
+              child: Image.asset('assets/ic_cheveron.png'),
             )
           ],
         ),
       );
     } else {
-      ///没有Eat数据时的Widget
+      ///no Eat data Widget
       return Container(
         height: 190,
         child: Column(
@@ -370,7 +434,7 @@ class EatDataWidget extends StatelessWidget {
                     child: Container(
                         margin: EdgeInsets.only(left: 4.0),
                         child: Text(
-                          '食事Check',
+                          '食事チェック',
                           style: Styles.text5.merge(
                             TextStyle(color: BeautyColors.blue01),
                           ),
@@ -395,8 +459,12 @@ class EatDataWidget extends StatelessWidget {
                     ),
                     Container(
                       margin: EdgeInsets.only(bottom: 54.0),
-                      child:
-                          OutlineButton(onPressed: () {}, child: Text(login)),
+                      child: OutlineButton(
+                          onPressed: () {},
+                          child: Text('登録',
+                              style: Styles.text7.merge(
+                                TextStyle(color: BeautyColors.gray06),
+                              ))),
                     )
                   ],
                 ),
@@ -1243,8 +1311,7 @@ class HealthDiagnosisDataWidget extends StatelessWidget {
 }
 
 ///进度layout的自定义View
-Widget getSeekWidget() {
-  //seeklayout 渐变颜色
+Widget getSeekWidget(int totalKCal) {
   var colorColumn = Color(0x80FD70B7);
   var colorColumn1 = Color(0x80DBB0FF);
   var colorColumn2 = Color(0x8046BEE8);
@@ -1253,7 +1320,6 @@ Widget getSeekWidget() {
     margin: EdgeInsets.only(left: 16),
     height: 20,
     decoration: BoxDecoration(
-      //背景
       image: DecorationImage(
         image: AssetImage('assets/gauge.png'),
         fit: BoxFit.cover,
@@ -1262,13 +1328,14 @@ Widget getSeekWidget() {
     child: Stack(
       children: [
         Container(
-          margin: EdgeInsets.only(right: 170, top: 2, bottom: 2, left: 1),
+          //total seek length == 310，4200kcal
+          margin: EdgeInsets.only(
+              right: 310 - totalKCal / 4200 * 310, top: 2, bottom: 2, left: 1),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-                //渐变位置
-                begin: Alignment.centerLeft, //右上
-                end: Alignment.centerRight, //左下
-                stops: [0.0, 0.5, 1.0], //[渐变起始点, 渐变结束点]
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                stops: [0.0, 0.5, 1.0],
                 colors: [colorColumn, colorColumn1, colorColumn2]),
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(10.0),
