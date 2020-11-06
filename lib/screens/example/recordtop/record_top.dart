@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_demox/screens/example/components/eat_card_top.dart';
-import 'package:flutter_demox/screens/example/components/reusable_card.dart';
-import 'package:flutter_demox/screens/example/record_top_view_model.dart';
+import 'package:flutter_demox/screens/example/recordtop/components/eat_card_top.dart';
+import 'package:flutter_demox/screens/example/recordtop/components/reusable_card.dart';
+import 'package:flutter_demox/screens/example/recordtop/record_top_view_model.dart';
 import 'package:flutter_demox/screens/example/resource/colors.dart';
 import 'package:flutter_demox/screens/example/resource/constants.dart';
 import 'package:flutter_demox/screens/example/resource/styles.dart';

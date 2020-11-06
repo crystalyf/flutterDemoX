@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demox/screens/example/recordtop/record_top.dart';
+import 'package:flutter_demox/screens/example/tutorial/step_tutorial.dart';
 import 'package:flutter_demox/screens/input_page.dart';
-import 'package:flutter_demox/screens/example/record_top.dart';
 
 void main() {
   runApp(MyApp());
@@ -55,9 +56,16 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
-            OutlineButton(onPressed: () {
-              _transferToRecordTop();
-            }, child: Text('记录Top Page'))
+            OutlineButton(
+                onPressed: () {
+                  _transferToRecordTop();
+                },
+                child: Text('记录Top Page')),
+            OutlineButton(
+                onPressed: () {
+                  _transferToStepTutorial();
+                },
+                child: Text('引导页 Page'))
           ],
         ),
       ),
@@ -91,4 +99,11 @@ class _MyHomePageState extends State<MyHomePage> {
             builder: (context) => RecordTop(), fullscreenDialog: true));
   }
 
+  ///跳转到stepTutorial
+  void _transferToStepTutorial() {
+    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+        context,
+        MaterialPageRoute(
+            builder: (context) => StepTutorial(), fullscreenDialog: true));
+  }
 }

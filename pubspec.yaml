@@ -33,6 +33,7 @@ dependencies:
   font_awesome_flutter: ^8.4.0
   http: ^0.12.2
   provider: ^4.3.2+1
+  page_view_indicators: ^1.3.2
 
 dev_dependencies:
   flutter_test:

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class BeautyColors {
   static const white01 = Color(0xffffffff);
+  static const white80 = Color(0x33ffffff);
   static const black01 = Color(0xff000000);
   static const red01 = Color(0xfffe4159);
   static const red02 = Color(0xffff5e72);
