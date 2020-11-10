@@ -13,9 +13,7 @@ class StepTutorial extends StatefulWidget {
 
 class _StepTutorialState extends State<StepTutorial> {
   //CC01_ 歩数チュートリアル
-  String stepTutorialTitle = '使い方';
-
-  String stepTutorialContent1 = '「へルスケア」と連携して\n歩数を記録しましゆう';
+  String stepTutorialTitle = '标题';
 
   String skipButtonText = '下一页';
 
@@ -29,12 +27,12 @@ class _StepTutorialState extends State<StepTutorial> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '「へルスケア」と連携して\n歩数を記録しましゆう',
-                  style: TextStyle(color: BeautyColors.blue02),
+                  '这是一段引导页的内容',
+                  style: TextStyle(color: BeautyColors.blue02, fontSize: 22),
                 ),
               ],
             )),
-        Image(image: AssetImage('assets/ic_tutorial_steps_1.png')),
+        // Image(image: AssetImage('assets/ic_tutorial_steps_1.png')),
       ],
     ),
     Column(
@@ -45,12 +43,12 @@ class _StepTutorialState extends State<StepTutorial> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '「へルスケア」と連携して\n歩数を記録しましゆう',
-                  style: TextStyle(color: BeautyColors.blue02),
+                  '这是一段引导页的内容',
+                  style: TextStyle(color: BeautyColors.blue02, fontSize: 22),
                 ),
               ],
             )),
-        Image(image: AssetImage('assets/ic_tutorial_steps_2.png')),
+        //  Image(image: AssetImage('assets/ic_tutorial_steps_2.png')),
       ],
     ),
     Column(
@@ -61,12 +59,12 @@ class _StepTutorialState extends State<StepTutorial> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '「へルスケア」と連携して\n歩数を記録しましゆう',
-                  style: TextStyle(color: BeautyColors.blue02),
+                  '这是一段引导页的内容',
+                  style: TextStyle(color: BeautyColors.blue02, fontSize: 22),
                 ),
               ],
             )),
-        Image(image: AssetImage('assets/ic_tutorial_steps_3.png')),
+        //  Image(image: AssetImage('assets/ic_tutorial_steps_3.png')),
       ],
     ),
   ];
@@ -128,8 +126,15 @@ class _StepTutorialState extends State<StepTutorial> {
                           child: Stack(
                             children: [
                               Center(
-                                child:
-                                StepTutorialCustomIndicator(), //  StepTutorialIndicator()，
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    //自定义的圆点指示器
+                                    StepTutorialCustomIndicator(),
+                                    //原生圆点指示器
+                                    StepTutorialIndicator(),
+                                  ],
+                                ),
                               ),
                               Align(
                                 alignment: Alignment.centerRight,

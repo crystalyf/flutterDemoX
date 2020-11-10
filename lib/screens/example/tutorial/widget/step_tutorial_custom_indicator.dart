@@ -4,6 +4,9 @@ import 'package:page_view_indicators/circle_page_indicator.dart';
 import 'package:provider/provider.dart';
 
 ///自定义View的指示器，使用的是3个图片做的小圆点布局。
+///
+///  带边缘的透明色原生的做不到, 圆圈最底部有白色
+///
 class StepTutorialCustomIndicator extends StatelessWidget {
 
   StepTutorialCustomIndicator();
