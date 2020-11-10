@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class RecordTopViewModel extends ChangeNotifier {
-  bool isHaveEatData = false;
+  bool isHaveEatData = true;
   bool isHaveStepData = false;
   bool isHaveWeightData = false;
   bool isHaveFeelData = false;
