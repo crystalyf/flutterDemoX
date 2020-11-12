@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demox/screens/example/calendar/month_task_page.dart';
 import 'package:flutter_demox/screens/example/recordtop/record_top.dart';
 import 'package:flutter_demox/screens/example/tutorial/step_tutorial.dart';
 import 'package:flutter_demox/screens/input_page.dart';
@@ -65,7 +66,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   _transferToStepTutorial();
                 },
-                child: Text('引导页 Page'))
+                child: Text('引导页 Page')),
+            OutlineButton(
+                onPressed: () {
+                  _transferToCalendar();
+                },
+                child: Text('日历 Page'))
           ],
         ),
       ),
@@ -105,5 +111,13 @@ class _MyHomePageState extends State<MyHomePage> {
         context,
         MaterialPageRoute(
             builder: (context) => StepTutorial(), fullscreenDialog: true));
+  }
+
+  ///跳转到stepTutorial
+  void _transferToCalendar() {
+    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MonthTaskPage(), fullscreenDialog: true));
   }
 }
