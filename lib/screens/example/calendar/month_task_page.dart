@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_demox/screens/example/resource/colors.dart';
+import 'package:flutter_demox/screens/example/resource/styles.dart';
 
 import 'month_view.dart';
 
@@ -20,15 +22,16 @@ class MonthTaskPageState extends State<MonthTaskPage>
   MonthView _monthView;
 
   MonthTaskPageState() {
-    MediaQueryData mediaQuery = MediaQueryData.fromWindow(window);
+    var mediaQuery = MediaQueryData.fromWindow(window);
     screenWidth = mediaQuery.size.width;
     screenHeight = mediaQuery.size.height;
     _monthView = MonthView(
-      onDateSelectedFn: (DateTime selectedDate) {
+      onDateSelectedFn: (selectedDate) {
         //_todoView.setSelectedDate(selectedDate);
       },
-      onMonthChangeFn: (DateTime showMonth) {},
-      initDate: null,
+      onMonthChangeFn: (showMonth) {
+        setState(() {});
+      },
     );
   }
 
@@ -38,9 +41,46 @@ class MonthTaskPageState extends State<MonthTaskPage>
   }
 
   @override
-  build(BuildContext context) {
-    return Scaffold(
-      body: _monthView,
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/bg_A.png'),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text(
+            '日历',
+            //设置appBar的文本样式
+            style: Styles.text10.merge(
+              TextStyle(color: BeautyColors.blue01),
+            ),
+          ),
+          leading: Container(
+              child: IconButton(
+                icon: Image(image: AssetImage('assets/ic_calender_back.png')),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )),
+          actions: <Widget>[
+            IconButton(
+              icon: Image(image: AssetImage('assets/btn_navi_help.png')),
+              onPressed: (){
+                print('btnNaviHelp');
+              },
+            ),
+          ],
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+          elevation: 0,  //阴影为0
+        ),
+        body: _monthView,
+      ),
     );
   }
 }
