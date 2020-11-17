@@ -8,7 +8,7 @@ Demo flutter合集
 
 
 
-自定义日历View：
+自定义日历View，支持手势滑动切换：
 
 
 ![img](https://github.com/crystalyf/flutterDemoX/blob/master/gif/%E6%97%A5%E5%8E%86.gif)
