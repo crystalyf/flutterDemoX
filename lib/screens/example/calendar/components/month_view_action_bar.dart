@@ -9,7 +9,9 @@ import 'package:flutter_demox/screens/example/resource/styles.dart';
 class MonthViewActionBar extends StatelessWidget {
   final double screenWidth;
   final DateTime showMonth;
-  final Function(DateTime month) onDateChangeFn;
+
+  //是否点击的是上个月的按钮? true: 是   false:否
+  final Function(DateTime month, bool isPrevious) onDateChangeFn;
   final String Function() getFestivalText;
   final String Function(String) onSaveFn;
 
@@ -39,7 +41,7 @@ class MonthViewActionBar extends StatelessWidget {
                   if (lastMonth.day != showMonth.day) {
                     lastMonth = DateTime(showMonth.year, showMonth.month, 0);
                   }
-                  onDateChangeFn(lastMonth);
+                  onDateChangeFn(lastMonth, true);
                 },
               ),
             ),
@@ -59,7 +61,7 @@ class MonthViewActionBar extends StatelessWidget {
                     nextMonth =
                         DateTime(showMonth.year, showMonth.month + 2, 0);
                   }
-                  onDateChangeFn(nextMonth);
+                  onDateChangeFn(nextMonth, false);
                 },
               ),
             )

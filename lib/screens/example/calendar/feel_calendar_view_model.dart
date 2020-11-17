@@ -12,6 +12,8 @@ class FeelCalendarViewModel extends ChangeNotifier {
 
   double width;
   Function(DateTime, bool) onDaySelectedFn;
+  final controller = PageController(initialPage: 1);
+  int currentPage = 1;
 
   FeelCalendarViewModel(
       double widthSize,
@@ -19,9 +21,12 @@ class FeelCalendarViewModel extends ChangeNotifier {
       MonthViewDateInfo monthViewDate) {
     width = widthSize;
     onDaySelectedFn = onDaySelectedFnParm;
-    // days = dayList(monthViewDate);
     _weekdays = _weekdayList();
     weekRow = _martrix(_weekdays);
+
+    controller.addListener(() {
+      notifyListeners();
+    });
   }
 
   List<TitleDay> _weekdayList() {

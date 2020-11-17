@@ -29,9 +29,6 @@ class MonthTaskPageState extends State<MonthTaskPage>
       onDateSelectedFn: (selectedDate) {
         //_todoView.setSelectedDate(selectedDate);
       },
-      onMonthChangeFn: (showMonth) {
-        setState(() {});
-      },
     );
   }
 
