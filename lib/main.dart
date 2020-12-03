@@ -4,6 +4,7 @@ import 'package:flutter_demox/screens/example/recordtop/record_top.dart';
 import 'package:flutter_demox/screens/example/tutorial/step_tutorial.dart';
 import 'package:flutter_demox/screens/input_page.dart';
 
+import 'screens/example/dbpage/db_page.dart';
 import 'screens/example/dialog/dialog_page.dart';
 
 void main() {
@@ -69,6 +70,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Text('日历 Page')),
             OutlineButton(
                 onPressed: () {
+                  _transferToDbPage();
+                },
+                child: Text('Sqlite Page')),
+            OutlineButton(
+                onPressed: () {
                   _transferToDialog();
                 },
                 child: Text('Dialog Page'))
@@ -122,10 +128,19 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   ///跳转到Dialog Page
+  void _transferToDbPage() {
+    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+        context,
+        MaterialPageRoute(
+            builder: (context) => DbPage(), fullscreenDialog: true));
+  }
+
+  ///跳转到Dialog Page
   void _transferToDialog() {
     Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
         context,
         MaterialPageRoute(
             builder: (context) => DialogPage(), fullscreenDialog: true));
   }
+
 }
