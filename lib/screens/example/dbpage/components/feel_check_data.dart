@@ -48,7 +48,7 @@ class FeelCheckData {
     timeType = mapToEnum(FeelCheckTimeTag.values, map[columnTimeType]);
   }
 
-  //Enum的转换
+  //Enum的转换，把index存储的值转换成枚举类型
   T mapToEnum<T>(List<T> values, int value) {
     if (value == null) {
       return null;
@@ -56,6 +56,7 @@ class FeelCheckData {
     return values[value];
   }
 
+  //Enum的转换，把枚举类型的值通过index存储
   dynamic enumToMap<T>(List<T> values, T value) {
     if (value == null) {
       return null;

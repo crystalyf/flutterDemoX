@@ -20,7 +20,7 @@ class FeelCheckSqlite {
     var databasesPath = await getDatabasesPath();
     String path = join(databasesPath, 'demo.db');
 
-//根据数据库文件路径和数据库版本号创建数据库表
+///根据数据库文件路径和数据库版本号创建数据库表
     db = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
           await db.execute('''
@@ -36,6 +36,9 @@ class FeelCheckSqlite {
           ''');
         });
   }
+
+
+  ///Sqlite数据入库都是以Map的形式，查出也是Map的形式
 
   // 插入一条书籍数据
   Future<FeelCheckData> insert(FeelCheckData book) async {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_demox/screens/example/lifecycle/focus_detector.dart';
 import 'package:flutter_demox/screens/example/recordtop/components/eat_card_top.dart';
 import 'package:flutter_demox/screens/example/recordtop/components/reusable_card.dart';
 import 'package:flutter_demox/screens/example/recordtop/record_top_view_model.dart';
@@ -16,134 +17,144 @@ class RecordTop extends StatefulWidget {
 class _RecordTopState extends State<RecordTop> {
   //当天摄入的卡路里
   int kcalValue = -1220;
+  final _resumeDetectorKey = UniqueKey();
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        return RecordTopViewModel();
-      },
-      child: Container(
-        child: Consumer<RecordTopViewModel>(builder: (context, value, child) {
-          return Scaffold(
-            //透明背景的appbar
-            backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              title: Text('記録'),
-              textTheme: TextTheme(
-                  subtitle1: TextStyle(
-                      //设置appBar的文本样式
-                      color: BeautyColors.blue02)),
-              centerTitle: true,
-              // 标题居中
+    return FocusDetector(
+      key: _resumeDetectorKey,
+      child: ChangeNotifierProvider(
+        create: (context) {
+          return RecordTopViewModel();
+        },
+        child: Container(
+          child: Consumer<RecordTopViewModel>(builder: (context, value, child) {
+            return Scaffold(
+              //透明背景的appbar
               backgroundColor: Colors.transparent,
-              //把appbar的背景色改成透明
-              elevation: 0, //阴影为0
-            ),
-            body: Container(
-              //调整小格布局的整体边界
-              margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    //在小格布局的基础上，调整eatTop布局
-                    margin: EdgeInsets.fromLTRB(5, 0, 5, 7),
-                    child: EatCardTop(
-                        cardChild: EatDataWidget(
-                      isHaveData:
-                          context.watch<RecordTopViewModel>().isHaveEatData,
-                      kcalValue: kcalValue,
-                    )),
-                  ),
-                  Expanded(
-                      child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: ReusableCard(
-                            onPress: () {
-                              _stepWidgetClick(context);
-                            },
-                            cardChild: StepDataWidget(
+              appBar: AppBar(
+                title: Text('記録'),
+                textTheme: TextTheme(
+                    subtitle1: TextStyle(
+                        //设置appBar的文本样式
+                        color: BeautyColors.blue02)),
+                centerTitle: true,
+                // 标题居中
+                backgroundColor: Colors.transparent,
+                //把appbar的背景色改成透明
+                elevation: 0, //阴影为0
+              ),
+              body: Container(
+                //调整小格布局的整体边界
+                margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      //在小格布局的基础上，调整eatTop布局
+                      margin: EdgeInsets.fromLTRB(5, 0, 5, 7),
+                      child: EatCardTop(
+                          cardChild: EatDataWidget(
+                        isHaveData:
+                            context.watch<RecordTopViewModel>().isHaveEatData,
+                        kcalValue: kcalValue,
+                      )),
+                    ),
+                    Expanded(
+                        child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: ReusableCard(
+                              onPress: () {
+                                _stepWidgetClick(context);
+                              },
+                              cardChild: StepDataWidget(
+                                  isHaveData: context
+                                      .watch<RecordTopViewModel>()
+                                      .isHaveStepData)),
+                        ),
+                        Expanded(
+                          child: ReusableCard(
+                              onPress: () {
+                                setState(() {
+                                  print('体重：press!!!');
+                                });
+                              },
+                              cardChild: WeightDataWidget(
                                 isHaveData: context
                                     .watch<RecordTopViewModel>()
-                                    .isHaveStepData)),
-                      ),
-                      Expanded(
-                        child: ReusableCard(
-                            onPress: () {
-                              setState(() {
-                                print('体重：press!!!');
-                              });
-                            },
-                            cardChild: WeightDataWidget(
-                              isHaveData: context
-                                  .watch<RecordTopViewModel>()
-                                  .isHaveWeightData,
-                            )),
-                      ),
-                    ],
-                  )),
-                  Expanded(
-                      child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: ReusableCard(
-                            onPress: () {
-                              print('感觉：press');
-                            },
-                            cardChild: FeelDataWidget(
-                              isHaveData: context
-                                  .watch<RecordTopViewModel>()
-                                  .isHaveFeelData,
-                            )),
-                      ),
-                      Expanded(
-                        child: ReusableCard(
+                                    .isHaveWeightData,
+                              )),
+                        ),
+                      ],
+                    )),
+                    Expanded(
+                        child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: ReusableCard(
+                              onPress: () {
+                                print('感觉：press');
+                              },
+                              cardChild: FeelDataWidget(
+                                isHaveData: context
+                                    .watch<RecordTopViewModel>()
+                                    .isHaveFeelData,
+                              )),
+                        ),
+                        Expanded(
+                          child: ReusableCard(
+                              onPress: () {
+                                setState(() {});
+                              },
+                              cardChild: SleepDataWidget(
+                                isHaveData: context
+                                    .watch<RecordTopViewModel>()
+                                    .isHaveSleepData,
+                              )),
+                        ),
+                      ],
+                    )),
+                    Expanded(
+                        child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: ReusableCard(
+                              onPress: () {
+                                print('健康年龄：press');
+                              },
+                              cardChild: HealthAgeDataWidget(
+                                isHaveData: context
+                                    .watch<RecordTopViewModel>()
+                                    .isHaveHealthAgeData,
+                              )),
+                        ),
+                        Expanded(
+                          child: ReusableCard(
                             onPress: () {
                               setState(() {});
                             },
-                            cardChild: SleepDataWidget(
+                            cardChild: HealthDiagnosisDataWidget(
                               isHaveData: context
                                   .watch<RecordTopViewModel>()
-                                  .isHaveSleepData,
-                            )),
-                      ),
-                    ],
-                  )),
-                  Expanded(
-                      child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: ReusableCard(
-                            onPress: () {
-                              print('健康年龄：press');
-                            },
-                            cardChild: HealthAgeDataWidget(
-                              isHaveData: context
-                                  .watch<RecordTopViewModel>()
-                                  .isHaveHealthAgeData,
-                            )),
-                      ),
-                      Expanded(
-                        child: ReusableCard(
-                          onPress: () {
-                            setState(() {});
-                          },
-                          cardChild: HealthDiagnosisDataWidget(
-                            isHaveData: context
-                                .watch<RecordTopViewModel>()
-                                .isHaveHealthDiagnosisData,
+                                  .isHaveHealthDiagnosisData,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ))
-                ],
+                      ],
+                    ))
+                  ],
+                ),
               ),
-            ),
-          );
-        }),
+            );
+          }),
+        ),
       ),
+      onResume: () {
+        //onResume:
+      },
+      onPause: () {
+        //onPause:
+      },
     );
   }
 
