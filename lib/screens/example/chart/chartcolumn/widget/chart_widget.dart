@@ -3,8 +3,9 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_demox/screens/example/resource/colors.dart';
 import 'package:flutter_demox/screens/example/chart/chartcolumn/extension/CanvasExtension.dart';
+import 'package:flutter_demox/screens/example/resource/colors.dart';
+
 import 'ImageLoader.dart';
 
 enum ChartLayoutType {
@@ -27,7 +28,7 @@ class CustomChartPaint extends CustomPainter {
   Paint _backgroundPaint;
   Paint _imagePaint;
 
-  List<int> graduationText = [0, 500, 1000, 1500, 2000, 2500];
+  List<double> graduationText = [0, 500, 1000, 1500, 2000, 2500];
 
   static const bottomTextTopMargin = 16.0;
 
@@ -102,7 +103,8 @@ class CustomChartPaint extends CustomPainter {
 
   Rect columnRect;
 
-  var maxRange = 2500;
+  ///图片区域的最大相对表示范围。比如总共150步，设置成300，那么柱状图顶部显示为图表的一半位置。设置成600，柱状图顶部显示为图表1/4的位置
+  double maxRange = 2500;
 
   var maxColumnCount = 0;
 
@@ -137,12 +139,14 @@ class CustomChartPaint extends CustomPainter {
     while (maxRange < maxStep) {
       maxRange += 250;
     }
+
+    ///纵轴分成6份。
     graduationText = [
       0,
-      maxRange ~/ 5,
-      maxRange ~/ 5 * 2,
-      maxRange ~/ 5 * 3,
-      maxRange ~/ 5 * 4,
+      maxRange / 5.0,
+      maxRange / 5 * 2,
+      maxRange / 5 * 3,
+      maxRange / 5 * 4,
       maxRange
     ];
 
@@ -208,6 +212,7 @@ class CustomChartPaint extends CustomPainter {
     });
 
     if (columnDataList != null && columnDataList.isNotEmpty) {
+      //循环遍历画所有柱状图数据源
       for (var i = 1; i <= columnDataList.length; i++) {
         if (columnDataList[i - 1].mount > 0) {
           _calculateColumnRect(i, size);
@@ -242,9 +247,12 @@ class CustomChartPaint extends CustomPainter {
         (maxColumnCount - 1);
   }
 
+  //计算单条矩形数据的显示位置
   void _calculateColumnRect(int i, Size size) {
+    //矩形的左边缘
     var rectLeft =
         pagePadding + columnPadding * (i - 1) + columnWidth * (i - 1);
+    //矩形的上边缘
     var rectTop = outOfRangeTopRegionHeight +
         popTextHeight +
         (size.height -
@@ -253,11 +261,12 @@ class CustomChartPaint extends CustomPainter {
                 popTextHeight) *
             (maxRange - columnDataList[i - 1].mount) /
             maxRange;
+    //矩形的右边缘
     var rectRight = pagePadding + columnWidth * i + columnPadding * (i - 1);
     columnRect = Rect.fromLTRB(rectLeft, rectTop, rectRight, topGraphHeight);
   }
 
-  //画柱状图数据源
+  ///画柱状图数据源
   void _drawAllColumn(ui.Canvas canvas, Offset from, Offset to) {
     _columnPaint.shader = ui.Gradient.linear(from, to, [
       BeautyColors.colorColumnBackground1st,
@@ -271,22 +280,25 @@ class CustomChartPaint extends CustomPainter {
     _columnPaint.style = PaintingStyle.fill;
     columnRoundRect = RRect.fromRectAndCorners(columnRect,
         topLeft: ui.Radius.circular(10), topRight: Radius.circular(10));
+    //画柱状图数据源
     canvas.drawRRect(columnRoundRect, _columnPaint);
-    _columnPaint.shader = ui.Gradient.linear(from, to, [
-      BeautyColors.colorColumn1st,
-      BeautyColors.colorColumnSec,
-      BeautyColors.colorColumnTrd
-    ], [
-      0,
-      0.5,
-      1
-    ]);
-    canvas.drawRRect(columnRoundRect, _columnPaint);
-    _columnPaint.shader = ui.Gradient.linear(
-        from, to, [BeautyColors.blue01, BeautyColors.blue01]);
-    _columnPaint.style = PaintingStyle.stroke;
-    _columnPaint.strokeWidth = 1.0;
-    canvas.drawRRect(columnRoundRect, _columnPaint);
+    // _columnPaint.shader = ui.Gradient.linear(from, to, [
+    //   BeautyColors.colorColumn1st,
+    //   BeautyColors.colorColumnSec,
+    //   BeautyColors.colorColumnTrd
+    // ], [
+    //   0,
+    //   0.5,
+    //   1
+    // ]);
+    // //绘制渐变效果
+    // canvas.drawRRect(columnRoundRect, _columnPaint);
+    // _columnPaint.shader = ui.Gradient.linear(
+    //     from, to, [BeautyColors.blue01, BeautyColors.blue01]);
+    // _columnPaint.style = PaintingStyle.stroke;
+    // _columnPaint.strokeWidth = 1.0;
+    // //绘制一层border效果
+    // canvas.drawRRect(columnRoundRect, _columnPaint);
   }
 
   void _drawSelectColumn(ui.Canvas canvas, Offset from, Offset to, int i) {
@@ -455,9 +467,8 @@ class CustomChartPaint extends CustomPainter {
     }
   }
 
+  ///绘制背景的长条灰色矩形
   void _drawBackgroundAndRightText(Canvas canvas, Size size) {
-    // draw area
-    //todo not accomplished much
     var backgroundHeight =
         (topGraphHeight - outOfRangeTopRegionHeight - popTextHeight) / 5;
     _backgroundPaint.color = BeautyColors.gray04;
@@ -465,6 +476,7 @@ class CustomChartPaint extends CustomPainter {
       n % 2 == 1
           ? _backgroundPaint.color = BeautyColors.gray04
           : _backgroundPaint.color = BeautyColors.white01;
+      // 使用 drawRect 方法绘制背景的长条灰色矩形
       canvas.drawRect(
           Rect.fromLTRB(
               0,
@@ -483,12 +495,14 @@ class CustomChartPaint extends CustomPainter {
           backgroundHeight * (n - 1) -
           wordsHeight / 2;
       var rightTextOffset = Offset(textXOffSet, textYOffset);
+      //绘制纵轴（Y轴）文字
       canvas.drawText(rightTextOffset, ui.TextStyle(color: BeautyColors.gray02),
           graduationText[n - 1].toString(),
           maxWidth: rightTextWidth, fontWeight: FontWeight.normal);
     }
   }
 
+  ///绘制横轴（X轴）文字
   void _drawBottomText(Canvas canvas, Size size, int key, String value) {
     var bottomTextWidth =
         calculateTextSize(true, value: value, fontWeight: FontWeight.bold);
@@ -499,6 +513,7 @@ class CustomChartPaint extends CustomPainter {
         columnWidth / 2 -
         textHalfWidth;
     var bottomTextOffset = Offset(textXOffSet, size.height - bottomTextHeight);
+    //绘制横轴文字
     canvas.drawText(
         bottomTextOffset, ui.TextStyle(color: BeautyColors.blue01), value,
         fontWeight: FontWeight.bold,

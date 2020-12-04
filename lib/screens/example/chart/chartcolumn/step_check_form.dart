@@ -95,6 +95,7 @@ class _StepCheckFormState extends State<StepCheckForm> {
       indicatorColor: BeautyColors.blue01,
       onTap: (i) {
         context.read<CheckViewModel>().changeText(i);
+        setState(() {});
       },
     );
   }
