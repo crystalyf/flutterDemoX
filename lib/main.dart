@@ -4,6 +4,7 @@ import 'package:flutter_demox/screens/example/recordtop/record_top.dart';
 import 'package:flutter_demox/screens/example/tutorial/step_tutorial.dart';
 import 'package:flutter_demox/screens/input_page.dart';
 
+import 'screens/example/chart/chartcolumn/step_check_page.dart';
 import 'screens/example/dbpage/db_page.dart';
 import 'screens/example/dialog/dialog_page.dart';
 
@@ -77,7 +78,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   _transferToDialog();
                 },
-                child: Text('Dialog Page'))
+                child: Text('Dialog Page')),
+            OutlineButton(
+                onPressed: () {
+                  _transferToColumnChartPage(context);
+                },
+                child: Text('chart Column Page'))
           ],
         ),
       ),
@@ -141,6 +147,14 @@ class _MyHomePageState extends State<MyHomePage> {
         context,
         MaterialPageRoute(
             builder: (context) => DialogPage(), fullscreenDialog: true));
+  }
+
+  ///跳转到柱状图Page
+  void _transferToColumnChartPage(BuildContext context2) {
+    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+        context,
+        MaterialPageRoute(
+            builder: (context) => StepCheckPage(baseContext: context2,), fullscreenDialog: true));
   }
 
 }

@@ -20,4 +20,13 @@ class BeautyColors {
   static const gray04 = Color(0xfff0f0f0);
   static const gray05 = Color(0xffdddcdc);
   static const gray06 = Color(0xff999999);
+
+  static const colorColumn1st = Color(0x80FD70B7);
+  static const colorColumnSec = Color(0x80DBB0FF);
+  static const colorColumnTrd = Color(0x8046BEE8);
+  static const colorColumnBackground1st = Color(0xFFD3EEFF);
+  static const colorColumnBackgroundSec = Color(0xFFD5E0FF);
+  static const colorColumnBackgroundTrd = Color(0xFFD3EEFF);
+  static const colorChartDash = Color(0xffD8D8D8);
+  static const colorCalendarDialogSelectedGreen = Color(0xffE4FFFE);
 }
