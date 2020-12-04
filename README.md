@@ -15,7 +15,7 @@ Demo flutter合集
 
 
 
-饼状图：
+柱状图：
 
 
 ![img](https://github.com/crystalyf/flutterDemoX/blob/master/gif/%E9%A5%BC%E7%8A%B6%E5%9B%BE.gif)
