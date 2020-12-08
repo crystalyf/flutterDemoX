@@ -17,16 +17,16 @@ class ImageLoader {
   static const markUpRight = 'mark_up_right';
 
   void preCacheImage() {
-    load('assets/density3x/ic_markup_1_center.png').then((value) {
+    load('assets/ic_markup_1_center.png').then((value) {
       imagePool.addAll({markUpCenter: value});
     });
-    load('assets/density3x/ic_markup_1.png').then((value) {
+    load('assets/ic_markup_triangle.png').then((value) {
       imagePool.addAll({markUpTriangle: value});
     });
-    load('assets/density3x/ic_markup_1_left.png').then((value) {
+    load('assets/ic_markup_1_left.png').then((value) {
       imagePool.addAll({markUpLeft: value});
     });
-    load('assets/density3x/ic_markup_1_right.png').then((value) {
+    load('assets/ic_markup_1_right.png').then((value) {
       imagePool.addAll({markUpRight: value});
     });
   }

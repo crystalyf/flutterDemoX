@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demox/screens/example/calendar/month_task_page.dart';
+import 'package:flutter_demox/screens/example/chart/chartpolyline/poly_line_page.dart';
+import 'package:flutter_demox/screens/example/chart/demo/poly_line_page_try.dart';
 import 'package:flutter_demox/screens/example/recordtop/record_top.dart';
 import 'package:flutter_demox/screens/example/tutorial/step_tutorial.dart';
 import 'package:flutter_demox/screens/input_page.dart';
@@ -83,7 +85,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   _transferToColumnChartPage(context);
                 },
-                child: Text('chart Column Page'))
+                child: Text('chart Column Page')),
+            OutlineButton(
+                onPressed: () {
+                  _transferToPolylinePage(context);
+                },
+                child: Text('chart PolyLine Page')),
+            OutlineButton(
+                onPressed: () {
+                  _transferToPolylinePageTry(context);
+                },
+                child: Text('chart PolyLine Try Page'))
           ],
         ),
       ),
@@ -154,7 +166,31 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
         context,
         MaterialPageRoute(
-            builder: (context) => StepCheckPage(baseContext: context2,), fullscreenDialog: true));
+            builder: (context) => StepCheckPage(
+                  baseContext: context2,
+                ),
+            fullscreenDialog: true));
   }
 
+  ///跳转到折线图Page
+  void _transferToPolylinePage(BuildContext context2) {
+    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PolyLinePage(
+                  baseContext: context2,
+                ),
+            fullscreenDialog: true));
+  }
+
+  ///跳转到折线图Page
+  void _transferToPolylinePageTry(BuildContext context2) {
+    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PolyLinePageTry(
+                  baseContext: context2,
+                ),
+            fullscreenDialog: true));
+  }
 }
