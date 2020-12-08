@@ -15,6 +15,13 @@ Demo flutter合集
 
 
 
+折线图：（原生画的没引库）
+
+
+![img](https://github.com/crystalyf/flutterDemoX/blob/master/gif/%E6%8A%98%E7%BA%BF%E5%9B%BE.gif)
+
+
+
 柱状图：（原生画的没引库）
 
 
