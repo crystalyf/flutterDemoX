@@ -23,8 +23,8 @@ class PolyLineBodyWidget extends StatefulWidget {
 }
 
 class PolyLineBodyWidgetState extends State<PolyLineBodyWidget> {
-  TapDownDetails details;
   final BuildContext baseContext;
+  WeightTopViewModel viewModel;
 
   PolyLineBodyWidgetState({this.baseContext});
 
@@ -41,75 +41,86 @@ class PolyLineBodyWidgetState extends State<PolyLineBodyWidget> {
 
     var polyPointList = context.select<WeightTopViewModel, List<PolyLineData>>(
         (viewModel) => viewModel.polyPointList);
-    return Column(
-      children: [
-        Container(
-          child: Container(
-            color: Colors.white,
-            child: Column(
+    return Container(
+      child: Selector<WeightTopViewModel, bool>(
+          selector: (context, viewModel) => viewModel.polyRefreshFlag,
+          builder: (context, value, child) {
+            viewModel = Provider.of<WeightTopViewModel>(context);
+            return Column(
               children: [
                 Container(
-                  height: 40,
-                  color: BeautyColors.blue04,
-                  child: Row(
-                    children: [
-                      SizedBox(width: 32),
-                      Container(
-                          width: 32, child: ArrowButton(isNextButton: false)),
-                      Expanded(
-                        child: Center(
-                          child: TimeDisplayWidget(),
+                  child: Container(
+                    color: Colors.white,
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 40,
+                          color: BeautyColors.blue04,
+                          child: Row(
+                            children: [
+                              SizedBox(width: 32),
+                              Container(
+                                  width: 32,
+                                  child: ArrowButton(isNextButton: false)),
+                              Expanded(
+                                child: Center(
+                                  child: TimeDisplayWidget(),
+                                ),
+                                flex: 1,
+                              ),
+                              Container(
+                                  width: 32,
+                                  child: ArrowButton(isNextButton: true)),
+                              SizedBox(width: 32),
+                            ],
+                          ),
                         ),
-                        flex: 1,
-                      ),
-                      Container(
-                          width: 32, child: ArrowButton(isNextButton: true)),
-                      SizedBox(width: 32),
-                    ],
+                        SizedBox(
+                          child: Stack(
+                            children: [
+                              Container(
+                                height: 360,
+                                padding: EdgeInsets.only(
+                                    left: 16, right: 16, bottom: 30, top: 10),
+                                child: SizedBox(
+                                    width: double.infinity,
+                                    child: GestureDetector(
+                                      onTapDown: (detail) {
+                                        setState(() {
+                                          //点击canvas的点击
+                                          viewModel.details = detail;
+                                        });
+                                      },
+                                      child: Container(
+                                        child: CustomPaint(
+                                          painter: PolyWidgetPainter(
+                                              context, polyPointList,
+                                              currentPolyLayoutType: type,
+                                              tapDownDetails: viewModel.details,
+                                              weightTopViewModel: Provider.of<
+                                                  WeightTopViewModel>(context)),
+                                          // painter: PolyLinePainter(),
+                                        ),
+                                      ),
+                                    )),
+                              ),
+                              // HealthCareButton(
+                              //   baseContext: baseContext,
+                              // )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                SizedBox(
-                  child: Stack(
-                    children: [
-                      Container(
-                        height: 360,
-                        padding: EdgeInsets.only(
-                            left: 16, right: 16, bottom: 30, top: 10),
-                        child: SizedBox(
-                            width: double.infinity,
-                            child: GestureDetector(
-                              onTapDown: (detail) {
-                                setState(() {
-                                  //点击canvas的点击
-                                  details = detail;
-                                });
-                              },
-                              child: Container(
-                                child: CustomPaint(
-                                  painter: PolyWidgetPainter(
-                                      context, polyPointList,
-                                      currentPolyLayoutType: type,
-                                      tapDownDetails: details),
-                                  // painter: PolyLinePainter(),
-                                ),
-                              ),
-                            )),
-                      ),
-                      // HealthCareButton(
-                      //   baseContext: baseContext,
-                      // )
-                    ],
-                  ),
+                Container(
+                  // height: 100,
+                  color: Colors.transparent,
                 ),
               ],
-            ),
-          ),
-        ),
-        Container(
-          // height: 100,
-          color: Colors.transparent,
-        ),
-      ],
+            );
+          }),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_demox/screens/example/chart/chartcolumn/extension/CanvasExtension.dart';
 import 'package:flutter_demox/screens/example/chart/chartcolumn/widget/ImageLoader.dart';
+import 'package:flutter_demox/screens/example/chart/chartpolyline/weight_top_view_model.dart';
 import 'package:flutter_demox/screens/example/chart/chartpolyline/widget/poly_line_data.dart';
 import 'package:flutter_demox/screens/example/chart/chartpolyline/widget/poly_type_enum.dart';
 import 'package:flutter_demox/screens/example/resource/colors.dart';
@@ -109,8 +110,12 @@ class PolyWidgetPainter extends CustomPainter {
 
   Map<int, String> bottomTextList = {};
 
+  WeightTopViewModel weightTopViewModel;
+
   PolyWidgetPainter(this.context, this.polyDataList,
-      {this.currentPolyLayoutType = PolyLayoutType.week, this.tapDownDetails}) {
+      {this.currentPolyLayoutType = PolyLayoutType.week,
+      this.tapDownDetails,
+      this.weightTopViewModel}) {
     if (polyDataList.isNotEmpty && polyDataList.length > 1) {
       minWeightValue = polyDataList[0].mount;
       polyDataList.forEach((element) {
@@ -168,6 +173,7 @@ class PolyWidgetPainter extends CustomPainter {
         ImageLoader.getInstance().getImage(ImageLoader.markUpTriangle);
     switch (currentPolyLayoutType) {
       case PolyLayoutType.week:
+        //日图被分成了7份
         columnWidth = 15.0;
         pagePadding = 28;
         bottomTextList = weekBottomText;
@@ -175,6 +181,7 @@ class PolyWidgetPainter extends CustomPainter {
 
         break;
       case PolyLayoutType.month:
+        //月图设置成了31份
         columnWidth = 5.0;
         pagePadding = 7;
         bottomTextList = monthBottomText;
@@ -182,6 +189,7 @@ class PolyWidgetPainter extends CustomPainter {
 
         break;
       case PolyLayoutType.year:
+        //年图设置成了12份
         columnWidth = 13.0;
         pagePadding = 20;
         bottomTextList = yearBottomText;
@@ -212,25 +220,23 @@ class PolyWidgetPainter extends CustomPainter {
 
     if (polyDataList != null && polyDataList.isNotEmpty) {
       //循环遍历画所有折线图数据源
-      for (var i = 1; i <= polyDataList.length; i++) {
-        if (polyDataList[i - 1].mount > 0) {
-          _calculateColumnRect(i, size);
-          var from = Offset(columnRect.left, columnRect.top);
-          var to = Offset(columnRect.right, columnRect.bottom);
-          //i=1画第一个点
-          _drawAllPoly(canvas, columnRect, i - 1);
-
-          // tap down action
-          if (tapDownDetails != null &&
-              tapDownDetails.localPosition.dx >
-                  columnRect.left - columnPadding / 2 &&
-              tapDownDetails.localPosition.dx <
-                  columnRect.right + columnPadding / 2) {
-            _drawSelectColumn(canvas, from, to, i);
-            _drawPopMessage(canvas, size, i);
-          }
+      for (var i = 1; i <= maxColumnCount; i++) {
+        _calculateColumnRect(i, size);
+        var from = Offset(columnRect.left, columnRect.top);
+        var to = Offset(columnRect.right, columnRect.bottom);
+        // tap down action
+        if (tapDownDetails != null &&
+            tapDownDetails.localPosition.dx >
+                columnRect.left - columnPadding / 2 &&
+            tapDownDetails.localPosition.dx <
+                columnRect.right + columnPadding / 2) {
+          _drawSelectColumn(canvas, from, to, i);
+          _drawPopMessage(canvas, from, to, size, i);
         }
       }
+      //i=1画第一个折线
+      _drawAllPoly(canvas);
+      //画所有的点
       _drawAllPoint(canvas);
     }
 
@@ -249,53 +255,79 @@ class PolyWidgetPainter extends CustomPainter {
 
   List<Rect> calculatedRectList = [];
 
-  //计算单条矩形数据的显示位置
+  //计算单条矩形数据的显示位置,i=1传的是第一柱。
   void _calculateColumnRect(int i, Size size) {
     //矩形的左边缘
     var rectLeft =
         pagePadding + columnPadding * (i - 1) + columnWidth * (i - 1);
+    //矩形的右边缘
+    var rectRight = pagePadding + columnWidth * i + columnPadding * (i - 1);
+
     //矩形的上边缘
     ///(size.height -bottomTextAreaHeight - outOfRangeTopRegionHeight -popTextHeight)是网格背景的高度
     /// (maxRange - polyDataList[i - 1].mount) /maxRange是圆点纵向高度占背景的高度比例。
-    var rectTop = outOfRangeTopRegionHeight +
-        popTextHeight +
-        (size.height -
-                bottomTextAreaHeight -
-                outOfRangeTopRegionHeight -
-                popTextHeight) *
-            ((maxWeightValue - minWeightValue + 5) -
-                (polyDataList[i - 1].mount - minWeightValue + 2)) /
-            (maxWeightValue - minWeightValue + 5);
-    //矩形的右边缘
-    var rectRight = pagePadding + columnWidth * i + columnPadding * (i - 1);
+    //月,年都是从1开始（1日，1月），唯独周的开始不一定
+    var rectTop = outOfRangeTopRegionHeight + popTextHeight;
+    if (currentPolyLayoutType == PolyLayoutType.week) {
+      polyDataList.forEach((pointData) {
+        var tempIndex = int.parse(pointData.date.split(".")[1]) -
+            weightTopViewModel.weightSundayDateTime.day;
+        if (tempIndex == i - 1) {
+          rectTop = outOfRangeTopRegionHeight +
+              popTextHeight + //+点构成的柱高
+              (size.height -
+                      bottomTextAreaHeight -
+                      outOfRangeTopRegionHeight -
+                      popTextHeight) *
+                  (1 -
+                      (pointData.mount - minWeightValue + 2) /
+                          (maxWeightValue - minWeightValue + 5));
+        }
+      });
+    } else {
+      polyDataList.forEach((pointData) {
+        var tempIndex = int.parse(pointData.date.split(".")[1]);
+        if (tempIndex == i) {
+          rectTop = outOfRangeTopRegionHeight +
+              popTextHeight + //+点构成的柱高
+              (size.height -
+                      bottomTextAreaHeight -
+                      outOfRangeTopRegionHeight -
+                      popTextHeight) *
+                  (pointData.mount - minWeightValue + 2) /
+                  (maxWeightValue - minWeightValue + 5);
+        }
+      });
+    }
     columnRect = Rect.fromLTRB(rectLeft, rectTop, rectRight, topGraphHeight);
     calculatedRectList.add(columnRect);
+    //去重
+    calculatedRectList = calculatedRectList.toSet().toList();
   }
 
   ///画柱状图数据源
-  void _drawAllPoly(ui.Canvas canvas, Rect rect, int index) {
-    if (index > 0) {
-      Paint _linePaint = new Paint()
-        ..color = BeautyColors.pink01
-        ..strokeCap = StrokeCap.round
-        ..isAntiAlias = true
-        ..strokeWidth = 2.0
-        ..style = PaintingStyle.stroke;
+  void _drawAllPoly(ui.Canvas canvas) {
+    Paint _linePaint = new Paint()
+      ..color = BeautyColors.pink01
+      ..strokeCap = StrokeCap.round
+      ..isAntiAlias = true
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke;
+
+    var resultList = [];
+    resultList = calculatedRectList.where((item) => item.top != 66).toList();
+    for (int index = 0; index < resultList.length - 1; index++)
       canvas.drawLine(
           Offset(
-              calculatedRectList[index - 1].right -
-                  (calculatedRectList[index - 1].right -
-                          calculatedRectList[index - 1].left) /
-                      2,
-              calculatedRectList[index - 1].top),
+              resultList[index].right -
+                  (resultList[index].right - resultList[index].left) / 2,
+              resultList[index].top),
           Offset(
-              calculatedRectList[index].right -
-                  (calculatedRectList[index].right -
-                          calculatedRectList[index].left) /
+              resultList[index + 1].right -
+                  (resultList[index + 1].right - resultList[index + 1].left) /
                       2,
-              calculatedRectList[index].top),
+              resultList[index + 1].top),
           _linePaint);
-    }
   }
 
   void _drawAllPoint(ui.Canvas canvas) {
@@ -313,7 +345,16 @@ class PolyWidgetPainter extends CustomPainter {
       ..style = PaintingStyle.fill
       ..color = BeautyColors.white01
       ..invertColors = false;
-    calculatedRectList.forEach((rect) {
+
+    int dayOffset = 1;
+    if (currentPolyLayoutType == PolyLayoutType.week) {
+      dayOffset = weightTopViewModel.weightSundayDateTime.day;
+    }
+    //取到的这个天数，就是第一个X轴第一个圆点可以画的起始index,等同于index 0
+    polyDataList.forEach((pointData) {
+      var tempIndex = int.parse(pointData.date.split(".")[1]) - dayOffset;
+      var rect = calculatedRectList[tempIndex];
+      pointData.showOnXLineIndex = tempIndex;
       //画柱状图数据源，参数是：offset(左，上)，半径，画笔
       canvas.drawCircle(
           Offset(rect.right - (rect.right - rect.left) / 2, rect.top),
@@ -334,128 +375,156 @@ class PolyWidgetPainter extends CustomPainter {
     } else {
       lineEnd = columnRect.bottom;
     }
-    canvas.drawLine(
-        Offset(
-            pagePadding +
-                columnWidth * i -
-                columnWidth / 2 +
-                columnPadding * (i - 1),
-            popTextHeight),
-        Offset(
-            pagePadding +
-                columnWidth * i -
-                columnWidth / 2 +
-                columnPadding * (i - 1),
-            lineEnd),
-        _linePaint);
+    if (calculatedRectList.isNotEmpty) {
+      calculatedRectList.forEach((element) {
+        if (element.left == from.dx &&
+            element.right == to.dx &&
+            from.dy != 66) {
+          canvas.drawLine(
+              Offset(
+                  pagePadding +
+                      columnWidth * i -
+                      columnWidth / 2 +
+                      columnPadding * (i - 1),
+                  popTextHeight),
+              Offset(
+                  pagePadding +
+                      columnWidth * i -
+                      columnWidth / 2 +
+                      columnPadding * (i - 1),
+                  lineEnd),
+              _linePaint);
+        }
+      });
+    }
   }
 
-  void _drawPopMessage(Canvas canvas, Size size, int i) {
-    double messageWidth;
-    double messageLeft;
-    var startText = '';
-    var stepText = '${polyDataList[i - 1].mount}kg';
-    switch (currentPolyLayoutType) {
-      case PolyLayoutType.week:
-        startText = polyDataList[i - 1].date;
-        break;
-      case PolyLayoutType.month:
-        startText = polyDataList[i - 1].date;
-        break;
-      case PolyLayoutType.year:
-        startText = '$i月';
-        break;
+  void _drawPopMessage(
+      Canvas canvas, Offset from, Offset to, Size size, int i) {
+    if (calculatedRectList.isNotEmpty && polyDataList.isNotEmpty) {
+      calculatedRectList.forEach((element) {
+        if (element.left == from.dx &&
+            element.right == to.dx &&
+            from.dy != 66) {
+          double messageWidth;
+          double messageLeft;
+          var target = polyDataList
+              .where((element) => element.showOnXLineIndex == i - 1)
+              .first;
+          var startText = '';
+          if (target != null) {
+            var stepText = '${target.mount}kg';
+            switch (currentPolyLayoutType) {
+              case PolyLayoutType.week:
+                startText = int.parse(target.date.split('.')[0]).toString() +
+                    '月' +
+                    int.parse(target.date.split('.')[1]).toString() +
+                    '日';
+                break;
+              case PolyLayoutType.month:
+                startText = int.parse(target.date.split('.')[0]).toString() +
+                    '月' +
+                    int.parse(target.date.split('.')[1]).toString() +
+                    '日';
+                break;
+              case PolyLayoutType.year:
+                startText = '$i月';
+                break;
+            }
+
+            var startTextWidth =
+                calculateTextSize(true, fontSize: 14, value: startText);
+            var startTextHeight =
+                calculateTextSize(false, fontSize: 14, value: startText);
+            var stepTextWidth = calculateTextSize(true,
+                fontSize: 14, fontWeight: FontWeight.bold, value: stepText);
+            var stepTextHeight = calculateTextSize(false,
+                fontSize: 14, fontWeight: FontWeight.bold, value: stepText);
+            messageWidth = startTextWidth + stepTextWidth + 2 * 6 + 8;
+
+            if (pagePadding +
+                    columnWidth * i -
+                    columnWidth / 2 +
+                    columnPadding * (i - 1) <=
+                (messageWidth + 12) / 2) {
+              messageLeft = 0;
+            } else if (pagePadding +
+                    columnWidth * i -
+                    columnWidth / 2 +
+                    columnPadding * (i - 1) >=
+                size.width - (messageWidth + 12) / 2) {
+              messageLeft = size.width - (messageWidth + 12);
+            } else {
+              messageLeft = pagePadding +
+                  columnWidth * i -
+                  columnWidth / 2 +
+                  columnPadding * (i - 1) -
+                  messageWidth / 2 -
+                  6;
+            }
+
+            if (imageCenter != null) {
+              canvas.drawImageRect(
+                  imageCenter,
+                  Rect.fromLTWH(0, 0, imageCenter.width.toDouble(),
+                      imageCenter.height.toDouble()),
+                  Rect.fromLTWH(messageLeft + 6, 0, messageWidth, 34),
+                  _imagePaint);
+            }
+
+            if (imageLeft != null) {
+              canvas.drawImageLTWH(imageLeft, messageLeft, 0, _imagePaint,
+                  width: 6, height: 34);
+            }
+
+            if (imageRight != null) {
+              canvas.drawImageLTWH(
+                  imageRight, messageLeft + messageWidth + 6, 0, _imagePaint,
+                  width: 6, height: 34);
+            }
+
+            if (imageTriangle != null) {
+              canvas.drawImageLTWH(
+                  imageTriangle,
+                  pagePadding +
+                      columnWidth * i -
+                      columnWidth / 2 +
+                      columnPadding * (i - 1) -
+                      5,
+                  32,
+                  _imagePaint,
+                  width: 10,
+                  height: 8);
+            }
+
+            var textXOffSet = messageLeft + 6 + 6;
+            var textYOffset = (34 - startTextHeight) / 2;
+            var leftTextOffset = Offset(textXOffSet, textYOffset);
+
+            canvas.drawText(
+              leftTextOffset,
+              ui.TextStyle(color: BeautyColors.gray02),
+              startText,
+              fontSize: 14,
+              maxWidth: startTextWidth,
+            );
+
+            var stepTextXOffSet = messageLeft + 6 + 6 + startTextWidth + 8;
+            var stepTextYOffset = (34 - stepTextHeight) / 2;
+            var stepTextOffset = Offset(stepTextXOffSet, stepTextYOffset);
+
+            canvas.drawText(
+              stepTextOffset,
+              ui.TextStyle(color: BeautyColors.gray02),
+              stepText,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              maxWidth: stepTextWidth,
+            );
+          }
+        }
+      });
     }
-
-    var startTextWidth =
-        calculateTextSize(true, fontSize: 14, value: startText);
-    var startTextHeight =
-        calculateTextSize(false, fontSize: 14, value: startText);
-    var stepTextWidth = calculateTextSize(true,
-        fontSize: 14, fontWeight: FontWeight.bold, value: stepText);
-    var stepTextHeight = calculateTextSize(false,
-        fontSize: 14, fontWeight: FontWeight.bold, value: stepText);
-    messageWidth = startTextWidth + stepTextWidth + 2 * 6 + 8;
-
-    if (pagePadding +
-            columnWidth * i -
-            columnWidth / 2 +
-            columnPadding * (i - 1) <=
-        (messageWidth + 12) / 2) {
-      messageLeft = 0;
-    } else if (pagePadding +
-            columnWidth * i -
-            columnWidth / 2 +
-            columnPadding * (i - 1) >=
-        size.width - (messageWidth + 12) / 2) {
-      messageLeft = size.width - (messageWidth + 12);
-    } else {
-      messageLeft = pagePadding +
-          columnWidth * i -
-          columnWidth / 2 +
-          columnPadding * (i - 1) -
-          messageWidth / 2 -
-          6;
-    }
-
-    if (imageCenter != null) {
-      canvas.drawImageRect(
-          imageCenter,
-          Rect.fromLTWH(0, 0, imageCenter.width.toDouble(),
-              imageCenter.height.toDouble()),
-          Rect.fromLTWH(messageLeft + 6, 0, messageWidth, 34),
-          _imagePaint);
-    }
-
-    if (imageLeft != null) {
-      canvas.drawImageLTWH(imageLeft, messageLeft, 0, _imagePaint,
-          width: 6, height: 34);
-    }
-
-    if (imageRight != null) {
-      canvas.drawImageLTWH(
-          imageRight, messageLeft + messageWidth + 6, 0, _imagePaint,
-          width: 6, height: 34);
-    }
-
-    if (imageTriangle != null) {
-      canvas.drawImageLTWH(
-          imageTriangle,
-          pagePadding +
-              columnWidth * i -
-              columnWidth / 2 +
-              columnPadding * (i - 1) -
-              5,
-          32,
-          _imagePaint,
-          width: 10,
-          height: 8);
-    }
-
-    var textXOffSet = messageLeft + 6 + 6;
-    var textYOffset = (34 - startTextHeight) / 2;
-    var leftTextOffset = Offset(textXOffSet, textYOffset);
-
-    canvas.drawText(
-      leftTextOffset,
-      ui.TextStyle(color: BeautyColors.gray02),
-      startText,
-      fontSize: 14,
-      maxWidth: startTextWidth,
-    );
-
-    var stepTextXOffSet = messageLeft + 6 + 6 + startTextWidth + 8;
-    var stepTextYOffset = (34 - stepTextHeight) / 2;
-    var stepTextOffset = Offset(stepTextXOffSet, stepTextYOffset);
-
-    canvas.drawText(
-      stepTextOffset,
-      ui.TextStyle(color: BeautyColors.gray02),
-      stepText,
-      fontSize: 14,
-      fontWeight: FontWeight.bold,
-      maxWidth: stepTextWidth,
-    );
   }
 
   double calculateTextSize(bool isWidth,

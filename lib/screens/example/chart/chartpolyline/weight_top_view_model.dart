@@ -9,10 +9,14 @@ class WeightTopViewModel extends ChangeNotifier {
   var hasBackButton = true;
   var hasPermission = true;
 
+  DateTime weightSundayDateTime;
+
   //ポリラインドットデータソース
   List<PolyLineData> polyPointList = [];
 
   PolyLayoutType polyType = PolyLayoutType.week;
+  bool polyRefreshFlag = false;
+  TapDownDetails details;
 
   WeightTopViewModel() {
     getData();
@@ -31,13 +35,13 @@ class WeightTopViewModel extends ChangeNotifier {
         endTime = startTime.subtract(Duration(days: -7));
         //TODO: false data
         polyPointList.clear();
-        var data11 = PolyLineData(mount: 65.0, date: '12月6日');
+        var data11 = PolyLineData(mount: 65.0, date: '12.6');
         polyPointList.add(data11);
-        var data22 = PolyLineData(mount: 73.0, date: '12月7日');
+        var data22 = PolyLineData(mount: 73.0, date: '12.9');
         polyPointList.add(data22);
-        var data33 = PolyLineData(mount: 68.0, date: '12月8日');
+        var data33 = PolyLineData(mount: 68.0, date: '12.10');
         polyPointList.add(data33);
-        var data44 = PolyLineData(mount: 76.0, date: '12月9日');
+        var data44 = PolyLineData(mount: 76.0, date: '12.11');
         polyPointList.add(data44);
         break;
       case PolyLayoutType.month:
@@ -46,13 +50,13 @@ class WeightTopViewModel extends ChangeNotifier {
         endTime = DateTime(startTime.year, startTime.month + 1, 1, 0, 0);
         //TODO: false data
         polyPointList.clear();
-        var data11 = PolyLineData(mount: 65.0, date: '12月6日');
+        var data11 = PolyLineData(mount: 65.0, date: '12.6');
         polyPointList.add(data11);
-        var data22 = PolyLineData(mount: 73.0, date: '12月7日');
+        var data22 = PolyLineData(mount: 73.0, date: '12.9');
         polyPointList.add(data22);
-        var data33 = PolyLineData(mount: 68.0, date: '12月8日');
+        var data33 = PolyLineData(mount: 68.0, date: '12.10');
         polyPointList.add(data33);
-        var data44 = PolyLineData(mount: 76.0, date: '12月9日');
+        var data44 = PolyLineData(mount: 76.0, date: '12.11');
         polyPointList.add(data44);
         break;
       case PolyLayoutType.year:
@@ -60,12 +64,11 @@ class WeightTopViewModel extends ChangeNotifier {
         endTime = DateTime(current.year + 1, 1, 1, 0, 0);
         //TODO: false data
         polyPointList.clear();
-        polyPointList.clear();
-        var data11 = PolyLineData(mount: 282.0, date: '12月');
+        var data11 = PolyLineData(mount: 282.0, date: '12.3');
         polyPointList.add(data11);
-        var data22 = PolyLineData(mount: 254.0, date: '1月');
+        var data22 = PolyLineData(mount: 254.0, date: '12.4');
         polyPointList.add(data22);
-        var data33 = PolyLineData(mount: 231.0, date: '2月');
+        var data33 = PolyLineData(mount: 231.0, date: '12.6');
         polyPointList.add(data33);
         break;
     }
@@ -88,7 +91,7 @@ class WeightTopViewModel extends ChangeNotifier {
     } else {
       hasBackButton = true;
     }
-    getData();
+    refreshPoly();
   }
 
   void changePolyText(int i) {
@@ -112,6 +115,13 @@ class WeightTopViewModel extends ChangeNotifier {
     currentTimeDurationDays = 0;
     hasNextButton = false;
     hasBackButton = true;
+    refreshPoly();
+  }
+
+  void refreshPoly() {
     getData();
+    polyRefreshFlag = !polyRefreshFlag;
+    details = null;
+    notifyListeners();
   }
 }

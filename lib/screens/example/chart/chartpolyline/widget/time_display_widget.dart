@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_demox/screens/example/resource/colors.dart';
 import 'package:flutter_demox/screens/example/resource/styles.dart';
@@ -15,8 +14,11 @@ class TimeDisplayWidget extends StatefulWidget {
 }
 
 class TimeDisplayState extends State<TimeDisplayWidget> {
+  WeightTopViewModel viewModel = WeightTopViewModel();
+
   @override
   Widget build(BuildContext context) {
+    viewModel = Provider.of<WeightTopViewModel>(context);
     var type = context.select<WeightTopViewModel, PolyLayoutType>(
         (viewModel) => viewModel.polyType);
     return Text(
@@ -31,26 +33,30 @@ class TimeDisplayState extends State<TimeDisplayWidget> {
     switch (type) {
       case PolyLayoutType.week:
         {
-          // 週
-          var monday =
-              currentTime.subtract(Duration(days: currentTime.weekday));
+          /// 週
+          //用当前日期减去这周所在day, 得到周日的日期（比如12.6是周二，那么就当前日减2，得到周日的日子）
           var sunday =
+              currentTime.subtract(Duration(days: currentTime.weekday));
+          //保存周状态下当前的开始周日日期。
+          viewModel.weightSundayDateTime = sunday;
+          //同理思维得到这周六的日子
+          var saturday =
               currentTime.subtract(Duration(days: currentTime.weekday - 6));
-          if (monday.year != sunday.year) {
-            return '${monday.year}.${monday.month}.${monday.day}~${sunday.year}.${sunday.month}.${sunday.day}';
-          } else if (monday.month != sunday.month) {
-            return '${monday.year}.${monday.month}.${monday.day}~${sunday.month}.${sunday.day}';
+          if (sunday.year != saturday.year) {
+            return '${sunday.year}.${sunday.month}.${sunday.day}~${saturday.year}.${saturday.month}.${saturday.day}';
+          } else if (sunday.month != saturday.month) {
+            return '${sunday.year}.${sunday.month}.${sunday.day}~${saturday.month}.${saturday.day}';
           }
-          return '${monday.year}.${monday.month}.${monday.day}~${sunday.day}';
+          return '${sunday.year}.${sunday.month}.${sunday.day}~${saturday.day}';
         }
       case PolyLayoutType.month:
         {
-          // 月
+          /// 月
           return '${currentTime.year}';
         }
       case PolyLayoutType.year:
         {
-          // 年
+          /// 年
           return '${currentTime.year}';
         }
     }
