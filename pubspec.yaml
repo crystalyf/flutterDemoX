@@ -48,6 +48,7 @@ dependencies:
   gzx_dropdown_menu: ^1.0.3
   sqflite: ^1.1.0
   visibility_detector: ^0.1.4
+  intl: ^0.16.0
 
 dev_dependencies:
   flutter_test:

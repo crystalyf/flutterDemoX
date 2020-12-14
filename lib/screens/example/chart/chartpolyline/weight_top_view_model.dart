@@ -1,4 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_demox/screens/example/timepicker/components/weight_data.dart';
+import 'package:flutter_demox/screens/example/timepicker/components/weight_sqlite.dart';
+import 'package:intl/intl.dart';
 
 import 'widget/poly_line_data.dart';
 import 'widget/poly_type_enum.dart';
@@ -8,18 +11,29 @@ class WeightTopViewModel extends ChangeNotifier {
   var hasNextButton = false;
   var hasBackButton = true;
   var hasPermission = true;
-
   DateTime weightSundayDateTime;
 
   //ポリラインドットデータソース
   List<PolyLineData> polyPointList = [];
-
   PolyLayoutType polyType = PolyLayoutType.week;
   bool polyRefreshFlag = false;
   TapDownDetails details;
 
+  WeightSqlite weightSqlite = WeightSqlite();
+  List<WeightData> dataList;
+
+  //WeightRecord
+  bool isActiveRegisterButton = false;
+  String birthday;
+  final birthdayController = TextEditingController();
+
   WeightTopViewModel() {
     getData();
+  }
+
+  @override
+  void dispose() {
+    birthdayController.dispose();
   }
 
   void getData() {
@@ -75,6 +89,34 @@ class WeightTopViewModel extends ChangeNotifier {
     //data = _repository.getStepData(type, startTime, endTime);
   }
 
+  Future<void> insertData() async {
+    await weightSqlite.openSqlite();
+    var result = WeightData();
+    result.year = 2020;
+    result.month = 12;
+    result.day = 11;
+    result.weightValue = 65;
+    await weightSqlite.insert(result);
+    //切记用完就close
+    await weightSqlite.close();
+  }
+
+  Future<void> getAll() async {
+    await weightSqlite.openSqlite();
+    dataList = await weightSqlite.queryAll();
+    dataList.forEach((item) {
+      print('item:' +
+          item.year.toString() +
+          ',' +
+          item.month.toString() +
+          ',' +
+          item.day.toString() +
+          ',' +
+          item.weightValue.toString());
+    });
+    await weightSqlite.close();
+  }
+
   void changeDuration(bool isForward) {
     if (isForward) {
       currentTimeDurationDays--;
@@ -123,5 +165,25 @@ class WeightTopViewModel extends ChangeNotifier {
     polyRefreshFlag = !polyRefreshFlag;
     details = null;
     notifyListeners();
+  }
+
+  ///从这开始，都是体重记录页面用的函数：
+  void onTapBirthdayForm() {
+    if (birthdayController.text == '') {
+      onSelectBirthdayPickerItem(DateTime.now());
+    }
+  }
+
+  ///选中日期后的回调
+  void onSelectBirthdayPickerItem(DateTime value) {
+    birthdayController.text = _formatDate(value);
+    isActiveRegisterButton = true;
+    notifyListeners();
+  }
+
+  ///日期格式化
+  String _formatDate(DateTime time) {
+    var formatter = DateFormat('yyyy年MMMd日', 'ja_JP');
+    return formatter.format(time);
   }
 }

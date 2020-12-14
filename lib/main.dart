@@ -5,23 +5,35 @@ import 'package:flutter_demox/screens/example/chart/demo/poly_line_page_try.dart
 import 'package:flutter_demox/screens/example/recordtop/record_top.dart';
 import 'package:flutter_demox/screens/example/tutorial/step_tutorial.dart';
 import 'package:flutter_demox/screens/input_page.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'screens/example/chart/chartcolumn/step_check_page.dart';
 import 'screens/example/dbpage/db_page.dart';
 import 'screens/example/dialog/dialog_page.dart';
+import 'screens/example/timepicker/weight_record.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  /// A list of this localizations delegate's supported locales.
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('en'),
+    Locale('ja')
+  ];
+
   //重写build方法
   @override
   Widget build(BuildContext context) {
     //返回一个Material风格的组件
     return MaterialApp(
       title: 'Flutter Demo',
+      //为了时间选择器增加如此配置
+      supportedLocales: supportedLocales,
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+      ],
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -91,6 +103,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   _transferToPolylinePage(context);
                 },
                 child: Text('chart PolyLine Page')),
+            OutlineButton(
+                onPressed: () {
+                  _transferToWeightRecordPage();
+                },
+                child: Text('时间选择器 Page')),
             OutlineButton(
                 onPressed: () {
                   _transferToPolylinePageTry(context);
@@ -192,5 +209,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   baseContext: context2,
                 ),
             fullscreenDialog: true));
+  }
+
+  ///跳转到时间选择器 Page
+  void _transferToWeightRecordPage() {
+    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+        context,
+        MaterialPageRoute(
+            builder: (context) => WeightRecord(), fullscreenDialog: true));
   }
 }
