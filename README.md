@@ -37,6 +37,13 @@ Demo flutter合集
 
 
 
+时间选择器：
+
+
+![img](https://github.com/crystalyf/flutterDemoX/blob/master/gif/%E6%97%B6%E9%97%B4%E9%80%89%E6%8B%A9%E5%99%A8.gif)
+
+
+
 自定义View效果的seekbar：
 
 
