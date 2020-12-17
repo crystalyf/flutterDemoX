@@ -41,6 +41,7 @@ Demo flutter合集
 
 
 ![img](https://github.com/crystalyf/flutterDemoX/blob/master/gif/%E6%97%B6%E9%97%B4%E9%80%89%E6%8B%A9%E5%99%A8.gif)
+![img](https://github.com/crystalyf/flutterDemoX/blob/master/gif/%E8%87%AA%E5%AE%9A%E4%B9%89%E6%97%B6%E9%97%B4%E9%80%89%E6%8B%A9%E5%99%A8.gif)
 
 
 
