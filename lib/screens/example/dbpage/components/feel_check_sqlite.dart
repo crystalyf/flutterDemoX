@@ -86,16 +86,16 @@ class FeelCheckSqlite {
   //   return null;
   // }
 
-  // // 根据ID删除书籍信息
-  // Future<int> delete(int id) async {
-  //   return await db.delete(tableBook, where: '$columnId = ?', whereArgs: [id]);
-  // }
+  // 根据ID删除书籍信息
+  Future<int> delete(int id) async {
+    return await db.delete(tableFeelCheck, where: '$columnId = ?', whereArgs: [id]);
+  }
 
-  // // 更新书籍信息
-  // Future<int> update(Book book) async {
-  //   return await db.update(tableBook, book.toMap(),
-  //       where: '$columnId = ?', whereArgs: [book.id]);
-  // }
+  // 更新书籍信息
+  Future<int> update(FeelCheckData book) async {
+    return await db.update(tableFeelCheck, book.toDbMap(),
+        where: '$columnId = ?', whereArgs: [book.id]);
+  }
 
   // 记得及时关闭数据库，防止内存泄漏
   close() async {
