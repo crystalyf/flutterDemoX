@@ -7,6 +7,7 @@ import 'package:flutter_demox/screens/example/tutorial/step_tutorial.dart';
 import 'package:flutter_demox/screens/input_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'screens/example/batchdelete/weight_check_history.dart';
 import 'screens/example/chart/chartcolumn/step_check_page.dart';
 import 'screens/example/dbpage/db_page.dart';
 import 'screens/example/dialog/dialog_page.dart';
@@ -108,6 +109,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   _transferToWeightRecordPage();
                 },
                 child: Text('时间选择器 Page')),
+
+            OutlineButton(
+                onPressed: () {
+                  _transferToWeightCheckHistory();
+                },
+                child: Text('批量删除 page ')),
             OutlineButton(
                 onPressed: () {
                   _transferToPolylinePageTry(context);
@@ -209,6 +216,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   baseContext: context2,
                 ),
             fullscreenDialog: true));
+  }
+
+  ///批量删除 Page
+  void _transferToWeightCheckHistory() {
+    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+        context,
+        MaterialPageRoute(
+            builder: (context) => WeightCheckHistory(), fullscreenDialog: true));
   }
 
   ///跳转到时间选择器 Page
