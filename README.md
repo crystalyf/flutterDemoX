@@ -45,6 +45,13 @@ Demo flutter合集
 
 
 
+批量删除：
+
+
+![img](https://github.com/crystalyf/flutterDemoX/blob/master/gif/%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4%EF%BC%88dialog%E5%BD%A2%E5%BC%8F%EF%BC%89.gif)
+
+
+
 自定义View效果的seekbar：
 
 
