@@ -45,6 +45,13 @@ Demo flutter合集
 
 
 
+自定义CheckBox：
+
+
+![img](https://github.com/crystalyf/flutterDemoX/blob/master/gif/%E8%87%AA%E5%AE%9A%E4%B9%89CheckBox.gif)
+
+
+
 批量删除：
 
 
