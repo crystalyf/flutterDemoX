@@ -9,6 +9,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'screens/example/batchdelete/weight_check_history.dart';
 import 'screens/example/chart/chartcolumn/step_check_page.dart';
+import 'screens/example/checkbox/want_to_summary_second.dart';
 import 'screens/example/dbpage/db_page.dart';
 import 'screens/example/dialog/dialog_page.dart';
 import 'screens/example/timepicker/weight_record.dart';
@@ -115,6 +116,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   _transferToWeightCheckHistory();
                 },
                 child: Text('批量删除 page ')),
+            OutlineButton(
+                onPressed: () {
+                  _transferToCheckBox();
+                },
+                child: Text('CheckBox page ')),
             OutlineButton(
                 onPressed: () {
                   _transferToPolylinePageTry(context);
@@ -225,6 +231,15 @@ class _MyHomePageState extends State<MyHomePage> {
         MaterialPageRoute(
             builder: (context) => WeightCheckHistory(), fullscreenDialog: true));
   }
+
+  ///CheckBox Page
+  void _transferToCheckBox() {
+    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+        context,
+        MaterialPageRoute(
+            builder: (context) => WantToSummarySecond(), fullscreenDialog: true));
+  }
+
 
   ///跳转到时间选择器 Page
   void _transferToWeightRecordPage() {

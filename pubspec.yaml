@@ -49,6 +49,8 @@ dependencies:
   sqflite: ^1.1.0
   visibility_detector: ^0.1.4
   intl: ^0.16.0
+  #屏幕适配
+  flutter_screenutil: ^2.1.0
 
 dev_dependencies:
   flutter_test:
