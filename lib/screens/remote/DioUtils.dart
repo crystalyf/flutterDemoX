@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 
+import 'DioLogInterceptor.dart';
+
 class DioUtils {
   /// global dio object
   static Dio dio;
@@ -72,7 +74,7 @@ class DioUtils {
       Function(String error) onError}) async {
     parameters = parameters ?? {};
     method = method ?? 'GET';
-    /// param
+    /// request的param
     parameters.forEach((key, value) {
       if (url.indexOf(key) != -1) {
         url = url.replaceAll(':$key', value.toString());
@@ -81,10 +83,10 @@ class DioUtils {
     print('request url：【' + method + '  ' + url + '】');
     print('request param：' + parameters.toString());
     Dio dio = createInstance();
-    //result
     var result;
     Response response;
     try {
+      //Get请求和Post请求发信的时候，参数param的字段不同，用不同的字段发
       if(method == GET){
         response = await dio.request(url,
             queryParameters: parameters,
@@ -111,25 +113,23 @@ class DioUtils {
     }
   }
 
-  /// createInstance
+  ///dio的单例模式
   static Dio createInstance() {
     if (dio == null) {
-      /// Global attributes: request prefix, connection timeout, response timeout
       var options = BaseOptions(
-        connectTimeout: 15000,
-        receiveTimeout: 15000,
+        connectTimeout: 15000, //连接超时
+        receiveTimeout: 15000, //响应超时
         responseType: ResponseType.plain,
         validateStatus: (status) {
-          // Do not use http status code to determine the status, use Adapter Interceptor to process (suitable for standard REST style)
           return true;
         },
         baseUrl: BASE_URL,
       );
-
       dio = Dio(options);
       (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
           (client) {
         client.badCertificateCallback = ((cert, host, port) => true);
+        // //设置代理,return 电脑上charles的代理
         // client.findProxy = (uri) {
         //   //proxy all request to localhost:8888
         //   return "PROXY 192.168.150.61:8889";
@@ -137,8 +137,8 @@ class DioUtils {
         // you can also create a new HttpClient to dio
       };
     }
-    // dio.interceptors.add(DioLogInterceptor());
-
+    // //添加请求之前的拦截器(可加可不加)
+    //  dio.interceptors.add(DioLogInterceptor());
     return dio;
   }
 

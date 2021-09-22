@@ -1,7 +1,7 @@
 
 import 'package:dio/dio.dart';
 
-///日志拦截器
+///日志拦截器，在请求被发送之前做一些事情
 class DioLogInterceptor extends Interceptor {
   @override
   Future onRequest(RequestOptions options) async {
