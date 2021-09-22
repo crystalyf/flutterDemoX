@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demox/screens/example/calendar/month_task_page.dart';
-import 'package:flutter_demox/screens/example/chart/chartpolyline/poly_line_page.dart';
-import 'package:flutter_demox/screens/example/chart/demo/poly_line_page_try.dart';
-import 'package:flutter_demox/screens/example/recordtop/record_top.dart';
-import 'package:flutter_demox/screens/example/tutorial/step_tutorial.dart';
 import 'package:flutter_demox/screens/input_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'screens/example/batchdelete/weight_check_history.dart';
-import 'screens/example/chart/chartcolumn/step_check_page.dart';
-import 'screens/example/checkbox/want_to_summary_second.dart';
-import 'screens/example/dbpage/db_page.dart';
-import 'screens/example/dialog/dialog_page.dart';
-import 'screens/example/timepicker/weight_record.dart';
+import 'screens/example/screen/batchdelete/weight_check_history.dart';
+import 'screens/example/screen/calendar/month_task_page.dart';
+import 'screens/example/screen/chart/chartcolumn/step_check_page.dart';
+import 'screens/example/screen/chart/chartpolyline/poly_line_page.dart';
+import 'screens/example/screen/chart/demo/poly_line_page_try.dart';
+import 'screens/example/screen/checkbox/want_to_summary_second.dart';
+import 'screens/example/screen/dbpage/db_page.dart';
+import 'screens/example/screen/dialog/dialog_page.dart';
+import 'screens/example/screen/recordtop/record_top.dart';
+import 'screens/example/screen/timepicker/weight_record.dart';
+import 'screens/example/screen/tutorial/step_tutorial.dart';
 
 void main() {
   runApp(MyApp());
@@ -110,7 +110,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   _transferToWeightRecordPage();
                 },
                 child: Text('时间选择器 Page')),
-
             OutlineButton(
                 onPressed: () {
                   _transferToWeightCheckHistory();
@@ -145,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //   _counter++;
     // });
 
-    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+    Navigator.push<MaterialPageRoute>(
         context,
         MaterialPageRoute(
             builder: (context) => InputPage(), fullscreenDialog: true));
@@ -153,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   ///跳转到recordTop
   void _transferToRecordTop() {
-    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+    Navigator.push<MaterialPageRoute>(
         context,
         MaterialPageRoute(
             builder: (context) => RecordTop(), fullscreenDialog: true));
@@ -161,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   ///跳转到stepTutorial
   void _transferToStepTutorial() {
-    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+    Navigator.push<MaterialPageRoute>(
         context,
         MaterialPageRoute(
             builder: (context) => StepTutorial(), fullscreenDialog: true));
@@ -169,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   ///跳转到stepTutorial
   void _transferToCalendar() {
-    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+    Navigator.push<MaterialPageRoute>(
         context,
         MaterialPageRoute(
             builder: (context) => MonthTaskPage(), fullscreenDialog: true));
@@ -177,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   ///跳转到Dialog Page
   void _transferToDbPage() {
-    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+    Navigator.push<MaterialPageRoute>(
         context,
         MaterialPageRoute(
             builder: (context) => DbPage(), fullscreenDialog: true));
@@ -185,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   ///跳转到Dialog Page
   void _transferToDialog() {
-    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+    Navigator.push<MaterialPageRoute>(
         context,
         MaterialPageRoute(
             builder: (context) => DialogPage(), fullscreenDialog: true));
@@ -193,7 +192,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   ///跳转到柱状图Page
   void _transferToColumnChartPage(BuildContext context2) {
-    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+    Navigator.push<MaterialPageRoute>(
         context,
         MaterialPageRoute(
             builder: (context) => StepCheckPage(
@@ -204,7 +203,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   ///跳转到折线图Page
   void _transferToPolylinePage(BuildContext context2) {
-    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+    Navigator.push<MaterialPageRoute>(
         context,
         MaterialPageRoute(
             builder: (context) => PolyLinePage(
@@ -215,7 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   ///跳转到折线图Page
   void _transferToPolylinePageTry(BuildContext context2) {
-    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+    Navigator.push<MaterialPageRoute>(
         context,
         MaterialPageRoute(
             builder: (context) => PolyLinePageTry(
@@ -226,24 +225,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
   ///批量删除 Page
   void _transferToWeightCheckHistory() {
-    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+    Navigator.push<MaterialPageRoute>(
         context,
         MaterialPageRoute(
-            builder: (context) => WeightCheckHistory(), fullscreenDialog: true));
+            builder: (context) => WeightCheckHistory(),
+            fullscreenDialog: true));
   }
 
   ///CheckBox Page
   void _transferToCheckBox() {
-    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+    Navigator.push<MaterialPageRoute>(
         context,
         MaterialPageRoute(
-            builder: (context) => WantToSummarySecond(), fullscreenDialog: true));
+            builder: (context) => WantToSummarySecond(),
+            fullscreenDialog: true));
   }
-
 
   ///跳转到时间选择器 Page
   void _transferToWeightRecordPage() {
-    Navigator.pushReplacement<MaterialPageRoute, MaterialPageRoute>(
+    Navigator.push<MaterialPageRoute>(
         context,
         MaterialPageRoute(
             builder: (context) => WeightRecord(), fullscreenDialog: true));
