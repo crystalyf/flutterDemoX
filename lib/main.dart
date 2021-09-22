@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_demox/screens/input_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'screens/example/screen/apipage/forget_pwd_page.dart';
 import 'screens/example/screen/batchdelete/weight_check_history.dart';
 import 'screens/example/screen/calendar/month_task_page.dart';
 import 'screens/example/screen/chart/chartcolumn/step_check_page.dart';
@@ -92,6 +93,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Text('Sqlite Page')),
             OutlineButton(
                 onPressed: () {
+                  _transferToAPISimplePage();
+                },
+                child: Text('发API样例画面')),
+            OutlineButton(
+                onPressed: () {
                   _transferToDialog();
                 },
                 child: Text('Dialog Page')),
@@ -180,6 +186,14 @@ class _MyHomePageState extends State<MyHomePage> {
         context,
         MaterialPageRoute(
             builder: (context) => DbPage(), fullscreenDialog: true));
+  }
+
+  ///跳转到API样例画面
+  void _transferToAPISimplePage() {
+    Navigator.push<MaterialPageRoute>(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ForgetPwdPage(), fullscreenDialog: true));
   }
 
   ///跳转到Dialog Page
