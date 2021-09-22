@@ -37,7 +37,7 @@ class DioUtils {
     Function(T t) onSuccess,
     Function(String error) onError,
   }) async {
-    ///request param
+    ///request param（请求参数）
     parameters = parameters ?? {};
     //param
     parameters.forEach((key, value) {
@@ -86,7 +86,10 @@ class DioUtils {
     var result;
     Response response;
     try {
-      //Get请求和Post请求发信的时候，参数param的字段不同，用不同的字段发
+      /// Dio的核心API就是下面的dio.request
+      ///
+      /// Get请求和Post请求发信的时候，参数param的字段不同，用不同的字段发
+      ///
       if(method == GET){
         response = await dio.request(url,
             queryParameters: parameters,
@@ -116,6 +119,7 @@ class DioUtils {
   ///dio的单例模式
   static Dio createInstance() {
     if (dio == null) {
+      //或者通过传递一个 `options`来创建dio实例
       var options = BaseOptions(
         connectTimeout: 15000, //连接超时
         receiveTimeout: 15000, //响应超时

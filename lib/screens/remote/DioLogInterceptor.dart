@@ -1,8 +1,10 @@
 
 import 'package:dio/dio.dart';
 
-///日志拦截器，在请求被发送之前做一些事情
+///通过继承Interceptor 类来实现自定义拦截器
 class DioLogInterceptor extends Interceptor {
+
+  ///在请求被发送之前做一些事情
   @override
   Future onRequest(RequestOptions options) async {
     String requestStr = "\n==================== REQUEST ====================\n"
@@ -26,6 +28,7 @@ class DioLogInterceptor extends Interceptor {
     return options;
   }
 
+  ///当请求失败时做一些预处理
   @override
   Future onError(DioError err) async {
     String errorStr = "\n==================== RESPONSE ====================\n"
@@ -45,6 +48,7 @@ class DioLogInterceptor extends Interceptor {
     return err;
   }
 
+  ///在返回响应数据之前做一些预处理
   @override
   Future onResponse(Response response) async {
     String responseStr =
@@ -55,7 +59,7 @@ class DioLogInterceptor extends Interceptor {
         (key, list) => responseStr += "\n  " + "\"$key\" : \"$list\",");
     responseStr += "\n}\n";
     responseStr += "- STATUS: ${response.statusCode}\n";
-
+    //实际开发中一般只需要处理200的情况，300、400、500保留错误信息，外层为http协议定义的响应码
     if (response.data != null) {
       responseStr += "- BODY:\n ${_parseResponse(response)}";
     }
